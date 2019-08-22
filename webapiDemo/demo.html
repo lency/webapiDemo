@@ -1,15 +1,29 @@
-
-HELLO WORLD
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" />
+    </head>
+<h1><a name="header-n13" class="md-header-anchor md-print-anchor" href="af://n13"> </a><span>a new kind of webview bridge base on prompt</span></h1>
+<p><span>let&#39;s start with a piece of sample.</span></p>
+<pre><code class='language-javascript' lang='javascript'>async function test() {
+    var a = webapi.times(3,2) // 6 -&gt; a
+    var b = webapi.x
+    webapi.x = a
+    let testVal = await webapi.waitAndAdd(a) //wait for 6 seconds and then 7 -&gt; testVal
+    alert(testVal)
+    }
+</code>
+<button onclick = "test()">run</button>
+</pre>
+<p><span>use javascript as javascript</span></p>
+<p><span>Clean, Beautiful, Easy Understand</span></p>
 
 <script>
     
-    window.onload = function() {
+    async function test() {
         try {
-            var a = webapi.tims(1,2)
+            var a = webapi.times(3,2)
             var b = webapi.x
             webapi.x = a
-            webapi.hime(12)
-            document.writeln(webapi.x)
+            alert(await webapi.waitAndAdd(a))
         }catch(e) {
             alert(e)
         }

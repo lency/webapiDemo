@@ -11,6 +11,12 @@ import WebKit
 
 class ViewController: UIViewController {
 
+    //commanders should split to AOM, BOM, DOM
+    //where AOM commander is associatate to app
+    //where BOM commander is associatate to an instant of webview, usualy save in the view controller
+    //where DOM commander is associatate to an document, usualy save in the view controller, and create when document start, destroy when document is end
+    var commanders : [String: WebCommander] = ["webapi":WebapiDemo.share]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -55,7 +61,7 @@ class ViewController: UIViewController {
         }
     }
 }
-var gd:String = "app"
+
 extension ViewController : WKUIDelegate {
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         let x = UIAlertController(title: "wk", message: message, preferredStyle: .alert)
@@ -66,17 +72,17 @@ extension ViewController : WKUIDelegate {
     
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
         if prompt == "__native__command__" {
-            let ret = "{\"type\":\"value\",\"value\":23}"
+            let ret = "{\"type\":\"error\",\"value\":23}"
             if let dt = defaultText,
                 let data = dt.data(using: .utf8),
                 let cmd = try? JSONDecoder().decode(JSCmdHeader.self, from: data) {
-                var ret1 : JsReturn?
+                var ret1 : String?
                 do {
-                    if cmd.class == "webapi" {
-                        ret1 = try webapi.dispatch(cmd.method, data)
-                        let data = try JSONEncoder().encode(ret)
-                        let str = String(data: data, encoding: .utf8)
-                        completionHandler(str)
+                    if let commander = commanders[cmd.class] {
+                        ret1 = try commander.dispatch_ex(cmd.method, cmd.type, data) { (s : String) in
+                            webView.evaluateJavaScript(s, completionHandler: nil)
+                        }
+                        completionHandler(ret1)
                         return
                     }
                     completionHandler(ret)
@@ -97,7 +103,7 @@ extension ViewController : WKUIDelegate {
             completionHandler(alert.textFields![0].text!)
         }))
         
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }
 
@@ -105,82 +111,3 @@ extension ViewController : WKNavigationDelegate {
     
 }
 
-struct Promise<T:Encodable> : Encodable {
-    let future : String
-    func coming(_ v: T) {
-        
-    }
-}
-
-class JsReturn : Encodable{
-    let type: String
-    init(_ type: String) {
-        self.type = type
-    }
-}
-
-class JsValueReturn<T: Encodable> : JsReturn {
-    let value: T
-    init(_ value: T) {
-        self.value = value
-        super.init("value")
-    }
-}
-
-class JsPromiseReturn : JsReturn {
-    let promise: String
-    override init(_ promise: String) {
-        self.promise = promise
-        super.init("promise")
-    }
-}
-
-
-
-struct JSCmdHeader : Codable {
-    let `class`: String
-    let method: String
-}
-
-struct JSCmd<T:Codable> : Codable {
-    let `class`: String
-    let method: String
-    let args: T
-}
-
-enum JSCmdError : Error {
-    case invalidparameters
-}
-
-struct webapi {
-    static func dispatch(_ method: String, _ json: Data) throws -> JsReturn {
-        if method == "hime" {
-            
-        } else if method == "tims" {
-            
-        } else if method == "get_x" {
-            
-        } else if method == "set_x" {
-            
-        }
-        
-        return JsValueReturn(10)
-    }
-    static func tims(_ json: String) throws -> Int {
-        struct Arg: Codable {
-            let obj1 : Int
-            let obj2 : Int
-        }
-        typealias Result = Int
-        
-        var ret : Result
-        if let data = json.data(using: .utf8),
-            let arg = try? JSONDecoder().decode(JSCmd<Arg>.self, from: data).args {
-                return tims(arg.obj1, arg.obj2)
-        }
-        throw JSCmdError.invalidparameters
-    }
-    private static func tims(_ a1: Int, _ a2: Int) -> Int {
-        return a1 * a2
-    }
-}

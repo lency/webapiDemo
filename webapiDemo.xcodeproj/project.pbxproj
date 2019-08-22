@@ -14,6 +14,8 @@
 		03325899230D5A7F00CE24A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03325897230D5A7F00CE24A6 /* LaunchScreen.storyboard */; };
 		033258A1230D5B2700CE24A6 /* demo.html in Resources */ = {isa = PBXBuildFile; fileRef = 033258A0230D5B2700CE24A6 /* demo.html */; };
 		033258A3230D5FDF00CE24A6 /* inj.js in Resources */ = {isa = PBXBuildFile; fileRef = 033258A2230D5FDF00CE24A6 /* inj.js */; };
+		FAF8C90F230EEA7400100374 /* WebApiDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C90E230EEA7400100374 /* WebApiDemo.swift */; };
+		FAF8C911230EEAFB00100374 /* WebApiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C910230EEAFB00100374 /* WebApiBridge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		0332589A230D5A7F00CE24A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		033258A0230D5B2700CE24A6 /* demo.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = demo.html; sourceTree = "<group>"; };
 		033258A2230D5FDF00CE24A6 /* inj.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = inj.js; sourceTree = "<group>"; };
+		FAF8C90E230EEA7400100374 /* WebApiDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebApiDemo.swift; sourceTree = "<group>"; };
+		FAF8C910230EEAFB00100374 /* WebApiBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebApiBridge.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,8 @@
 				0332589A230D5A7F00CE24A6 /* Info.plist */,
 				033258A0230D5B2700CE24A6 /* demo.html */,
 				033258A2230D5FDF00CE24A6 /* inj.js */,
+				FAF8C90E230EEA7400100374 /* WebApiDemo.swift */,
+				FAF8C910230EEAFB00100374 /* WebApiBridge.swift */,
 			);
 			path = webapiDemo;
 			sourceTree = "<group>";
@@ -145,6 +151,8 @@
 			files = (
 				03325891230D5A7D00CE24A6 /* ViewController.swift in Sources */,
 				0332588F230D5A7D00CE24A6 /* AppDelegate.swift in Sources */,
+				FAF8C911230EEAFB00100374 /* WebApiBridge.swift in Sources */,
+				FAF8C90F230EEA7400100374 /* WebApiDemo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
