@@ -79,9 +79,15 @@ extension WebCommander {
         case .AsyncFunction:
             let ck = "_" + String(format: "%x", json.hashValue)
             data = try JsPromiseReturn( ck ).toJsonData()
-            try get_async_pointer(method)(json) { (ret: Encodable) in
-                let d = try ret.toJsonData()
-                if let s = String(data:d, encoding: .utf8) {
+//            try get_async_pointer(method)(json) { (ret: Encodable) in
+//                let d = try ret.toJsonData()
+//                if let s = String(data:d, encoding: .utf8) {
+//                    invoker("\(ck)('\(s)')")
+//                }
+//            }
+            try get_future_pointer(method)(json).then { (ret: Encodable) in
+                if let d = try? ret.toWrapperJsonData(),
+                  let s = String(data:d, encoding: .utf8) {
                     invoker("\(ck)('\(s)')")
                 }
             }
