@@ -9,66 +9,18 @@
 import Foundation
 
 
-class WebapiDemo : WebCommander {
-    func get_async_pointer(_ method: String) throws -> AsyncCall {
-        if method == "waitAndAdd" {
-            return WebapiDemo.waitAndAdd
-        }
-        throw JSCmdError.methodnotfound
-    }
-
-    func get_sync_pointer(_ method: String) throws -> SyncCall {
-        if method == "times" {
-            return WebapiDemo.times
-        }
-        if method == "get_x" {
-            return {[weak self] _ in
-                try JSONEncoder().encode( JsValueReturn( self?.x ) )
-            }
-        }
-        throw JSCmdError.methodnotfound
-    }
-
-    func get_setter_pointer(_ method: String) throws -> SetterCall {
-        if method == "set_x" {
-            return {[weak self] data in
-                self?.x = try JSONDecoder().decode(JSCmd<SetVal<Int?>>.self, from: data).args.newVal
-            }
-        }
-        throw JSCmdError.methodnotfound
-    }
-
+class WebapiDemo {
     static let share = WebapiDemo()
     var x : Int?
-    func dispatch(_ method: String, _ type: CmdType, _ json: Data, invoker: @escaping (String) -> ()) throws -> String? {
-        var data : Data?
-        if method == "waitAndAdd" {
-            let ck = "_" + String(format: "%x", json.hashValue)
-            try WebapiDemo.waitAndAdd(json) {ret in
-                invoker("\(ck)(\(ret))")
-            }
-            data = try JSONEncoder().encode( JsPromiseReturn( ck ) )
-        } else if method == "times" {
-            data = try WebapiDemo.times(json)
-        } else if method == "get_x" {
-            data = try JSONEncoder().encode( JsValueReturn( x ) )
-        } else if method == "set_x" {
-            x = try JSONDecoder().decode(JSCmd<SetVal<Int?>>.self, from: json).args.newVal
-        }
 
-        return data.flatMap { String(data: $0, encoding: .utf8) }
-    }
-
-
-
-    private static func times(_ data: Data) throws -> Data {
+    private static func times(_ data: Data) throws -> Encodable {
         struct Arg: Codable {
             let obj1 : Int
             let obj2 : Int
         }
 
         if let arg = try? JSONDecoder().decode(JSCmd<Arg>.self, from: data).args {
-            return try JSONEncoder().encode( JsValueReturn(times(arg.obj1, arg.obj2)))
+            return JsValueReturn(times(arg.obj1, arg.obj2))
         }
         throw JSCmdError.invalidparameters
     }
@@ -93,5 +45,30 @@ class WebapiDemo : WebCommander {
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(a1)) {
             b(a1+1)
         }
+    }
+}
+
+extension WebapiDemo: WebCommander {
+    func get_async_pointer(_ method: String) throws -> AsyncCall {
+        if method == "waitAndAdd" {
+            return WebapiDemo.waitAndAdd
+        }
+        throw JSCmdError.methodnotfound
+    }
+
+    func get_sync_pointer(_ method: String) throws -> SyncCall {
+        if method == "times" {
+            return WebapiDemo.times
+        }
+        throw JSCmdError.methodnotfound
+    }
+
+    func get_setter_pointer(_ method: String) throws -> SetterCall {
+        if method == "x" {
+            return {[weak self] data in
+                self?.x = try JSONDecoder().decode(JSCmd<SetVal<Int?>>.self, from: data).args.newVal
+            }
+        }
+        throw JSCmdError.methodnotfound
     }
 }

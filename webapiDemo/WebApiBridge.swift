@@ -50,12 +50,12 @@ struct SetVal<T:Codable> : Codable {
 }
 
 typealias AsyncCall = (Data, @escaping (Int) -> () ) throws -> ()
-typealias SyncCall = (Data) throws -> Data
+typealias SyncCall = (Data) throws -> Encodable
 typealias GetterCall = (Data) throws -> Data
 typealias SetterCall = (Data) throws -> ()
 
 protocol WebCommander {
-    func dispatch(_ method: String, _ type: CmdType, _ json: Data, invoker: @escaping (String) -> ()) throws -> String?
+//    func dispatch(_ method: String, _ type: CmdType, _ json: Data, invoker: @escaping (String) -> ()) throws -> String?
     func get_async_pointer(_ method: String) throws -> AsyncCall
     func get_sync_pointer(_ method: String) throws -> SyncCall
     func get_setter_pointer(_ method: String) throws -> SetterCall
@@ -75,16 +75,40 @@ extension WebCommander {
         switch type {
         case .AsyncFunction:
             let ck = "_" + String(format: "%x", json.hashValue)
-            data = try JSONEncoder().encode( JsPromiseReturn( ck ) )
+            data = try JsPromiseReturn( ck ).toJsonData()
             try get_async_pointer(method)(json) {ret in
                 invoker("\(ck)(\(ret))")
             }
-        case .Function, .Getter:
-            data = try get_sync_pointer(method)(json)
+        case .Function:
+            data = try get_sync_pointer(method)(json).toJsonData()
+        case .Getter:
+            data = try getPropertyData(method)
         case .Setter:
             _ = try get_setter_pointer(method)(json)
-            data = try JSONEncoder().encode( JsDone() )
+            data = try JsDone().toJsonData()
         }
-        return data.flatMap { String(data: $0, encoding: .utf8) }
+        return data.flatMap { String(data: $0, encoding: .utf8)}
+    }
+
+    func getPropertyData(_ name: String) throws -> Data {
+        let mirror = Mirror(reflecting: self)
+        for prop in mirror.children {
+            if prop.label == name {
+                if let v = prop.value as? Encodable {
+                    return try v.toWrapperJsonData()
+                }
+                break
+            }
+        }
+        throw JSCmdError.methodnotfound
+    }
+}
+
+extension Encodable {
+    func toJsonData() throws -> Data {
+        return try JSONEncoder().encode(self)
+    }
+    func toWrapperJsonData() throws -> Data {
+        return try JSONEncoder().encode(JsValueReturn(self))
     }
 }

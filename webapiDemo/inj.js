@@ -52,7 +52,7 @@ function imp_stub(api, name) {
         let s = {
           class: name,
                                      type:"Getter",
-          method: "get_" + pp
+          method: pp
         };
         return npccall(s);
       });
@@ -64,7 +64,7 @@ function imp_stub(api, name) {
         let s = {
           class: name,
                                      type:"Setter",
-          method: "set_" + pp,
+          method: pp,
           args: { newVal: v }
         };
         npccall(s);
@@ -74,8 +74,22 @@ function imp_stub(api, name) {
   return new api();
 }
 
+class Emitter {
+    constructor() {
+        var delegate = document.createDocumentFragment();
+        [
+         'addEventListener',
+         'dispatchEvent',
+         'removeEventListener'
+         ].forEach(f =>
+                   this[f] = (...xs) => delegate[f](...xs)
+                   )
+    }
+}
+
+
 let webapi = imp_stub(
-  class {
+  class extends Emitter {
     times(obj1, obj2) {}
     async waitAndAdd(seconds) {}
     get x() {}
