@@ -50,15 +50,18 @@ struct SetVal<T:Codable> : Codable {
 }
 
 typealias AsyncCall = (Data, @escaping (Encodable) throws -> () ) throws -> ()
+typealias FutureCall = (Data) throws -> EncodableFuture
 typealias SyncCall = (Data) throws -> Encodable
-typealias GetterCall = (Data) throws -> Data
-typealias SetterCall = (Data) throws -> ()
+//typealias GetterCall = (Data) throws -> Data
+typealias SetterCall = (Data) throws -> JsDone
+typealias Proc = (Data) throws -> ()
 
 protocol WebCommander {
 //    func dispatch(_ method: String, _ type: CmdType, _ json: Data, invoker: @escaping (String) -> ()) throws -> String?
     func get_async_pointer(_ method: String) throws -> AsyncCall
     func get_sync_pointer(_ method: String) throws -> SyncCall
     func get_setter_pointer(_ method: String) throws -> SetterCall
+    func get_future_pointer(_ method: String) throws -> FutureCall
 }
 
 enum CmdType : String, Codable {
@@ -87,8 +90,7 @@ extension WebCommander {
         case .Getter:
             data = try getPropertyData(method)
         case .Setter:
-            _ = try get_setter_pointer(method)(json)
-            data = try JsDone().toJsonData()
+            data = try get_setter_pointer(method)(json).toJsonData()
         }
         return data.flatMap { String(data: $0, encoding: .utf8)}
     }

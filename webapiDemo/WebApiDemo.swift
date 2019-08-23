@@ -8,30 +8,30 @@
 
 import Foundation
 
-
-class WebapiDemo {
+class WebapiDemo : BaseCommand {
     static let share = WebapiDemo()
+//properties
     var x : Int?
 
+//sync func time(obj1, obj2)
     struct Arg: Codable {
         let obj1 : Int
         let obj2 : Int
     }
-    private static func times1(_ args: Arg) -> Int {
+    private static func times(_ args: Arg) -> Int {
         return args.obj1 * args.obj2
     }
-
+//async func waitAndAdd(secconds)
     struct Arg1: Codable {
         let seconds : Int
     }
-
     private static func waitAndAdd(_ args: Arg1, b: @escaping (Int) -> () ) {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(args.seconds)) {
             b(args.seconds + 1)
         }
     }
-
+//async func waitAndAdd(secconds) in future style
     private static func waitAndAdd2(_ args: Arg1) -> JSFuture<Int> {
         let f = JSFuture<Int>()
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(args.seconds)) {
@@ -39,12 +39,12 @@ class WebapiDemo {
         }
         return f
     }
-
-    func trigger(_ : Data) throws -> Encodable {
+//sync func trigger without parameter, and start an event
+    func trigger(_ : Data) throws -> JsDone {
         genEvents()
         return JsDone()
     }
-
+//this function will make js eventlistener work for some time
     func genEvents() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             if let `self` = self, let x = self.x, x < 16 {
@@ -54,33 +54,32 @@ class WebapiDemo {
             }
         }
     }
-}
-
-extension WebapiDemo: WebCommander {
-    func get_async_pointer(_ method: String) throws -> AsyncCall {
-        if method == "waitAndAdd" {
-            //return WebapiDemo.waitAndAdd
-            return JsCmdUtil.template(WebapiDemo.waitAndAdd2)
-        }
-        throw JSCmdError.methodnotfound
+//setter for x property
+    func setX(_ arg: SetVal<Int?>) -> Encodable {
+        x = arg.newVal
+        return JsDone()
     }
-
-    func get_sync_pointer(_ method: String) throws -> SyncCall {
-        if method == "times" {
-            return JsCmdUtil.template(WebapiDemo.times1)
-        }
-        if method == "trigger" {
-            return trigger
-        }
-        throw JSCmdError.methodnotfound
+//init calls
+    override init() {
+        super.init()
+        syncCalls = ["times": JsCmdUtil.template(WebapiDemo.times),
+                     "trigger": trigger
+        ]
+        asyncCalls = ["waitAndAdd": JsCmdUtil.template(WebapiDemo.waitAndAdd2)
+        ]
+        futureCalls = ["waitAndAdd": JsCmdUtil.template(WebapiDemo.waitAndAdd2)]
+//        let setx : SetterCall = JsCmdUtil.template(setX)
+//        setterCalls = ["x":  setx]
     }
-
-    func get_setter_pointer(_ method: String) throws -> SetterCall {
+//specially for setter
+    override func get_setter_pointer(_ method: String) throws -> SetterCall {
         if method == "x" {
             return {[weak self] data in
                 self?.x = try JSONDecoder().decode(JSCmd<SetVal<Int?>>.self, from: data).args.newVal
+                return JsDone()
             }
         }
+
         throw JSCmdError.methodnotfound
     }
 }

@@ -8,6 +8,10 @@
 
 import Foundation
 
+protocol EncodableFuture {
+    func then (_ deal: @escaping (Encodable) -> ())
+}
+
 class JSFuture<T> {
     typealias Callback = (T?) -> ()
     var value: T? {
@@ -25,6 +29,17 @@ class JSFuture<T> {
     var state: State = .Init
     private var deal : Callback?
     func then (_ deal: @escaping Callback) {
+        if state == .OK {
+            deal(value)
+        } else {
+            self.deal = deal
+        }
+    }
+
+}
+
+extension JSFuture : EncodableFuture where T: Encodable {
+    func then (_ deal: @escaping (Encodable) -> ()) {
         if state == .OK {
             deal(value)
         } else {
