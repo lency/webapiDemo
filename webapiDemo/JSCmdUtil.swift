@@ -41,12 +41,7 @@ struct JsCmdUtil {
     }
 
     static func template<T:Codable>(_ fun: @escaping (T) -> JsDone) -> SetterCall{
-        return { data in
-            if let arg = try? JSONDecoder().decode(JSCmd<T>.self, from: data).args {
-                return fun(arg)
-            }
-            throw JSCmdError.invalidparameters
-        }
+        return toArg <+> fun
     }
     static func template<T:Codable, R:Encodable>(_ fun: @escaping (T) -> R) -> SyncCall {
         return toArg <+> fun <+> ToJsValueReturn
