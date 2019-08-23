@@ -94,6 +94,7 @@ let webapi = imp_stub(
     async waitAndAdd(seconds) {}
     get x() {}
     set x(newVal) {}
+    trigger(){}
   },
   "webapi"
 );

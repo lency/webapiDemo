@@ -103,12 +103,3 @@ extension WebCommander {
         throw JSCmdError.methodnotfound
     }
 }
-
-extension Encodable {
-    func toJsonData() throws -> Data {
-        return try JSONEncoder().encode(self)
-    }
-    func toWrapperJsonData() throws -> Data {
-        return try JSONEncoder().encode(JsValueReturn(self))
-    }
-}

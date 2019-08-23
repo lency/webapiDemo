@@ -46,6 +46,19 @@ class WebapiDemo {
             b(a1+1)
         }
     }
+    func trigger(_ data: Data) throws -> Encodable {
+        genEvents()
+        return JsDone()
+    }
+    func genEvents() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            if let `self` = self, let x = self.x, x < 16 {
+                NotificationCenter.default.post(name: .init("play"), object: self, userInfo: ["value" : x])
+                self.x = x + 1
+                self.genEvents()
+            }
+        }
+    }
 }
 
 extension WebapiDemo: WebCommander {
@@ -59,6 +72,9 @@ extension WebapiDemo: WebCommander {
     func get_sync_pointer(_ method: String) throws -> SyncCall {
         if method == "times" {
             return WebapiDemo.times
+        }
+        if method == "trigger" {
+            return trigger
         }
         throw JSCmdError.methodnotfound
     }

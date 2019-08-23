@@ -15,8 +15,8 @@ class ViewController: UIViewController {
     //where AOM commander is associatate to app
     //where BOM commander is associatate to an instant of webview, usualy save in the view controller
     //where DOM commander is associatate to an document, usualy save in the view controller, and create when document start, destroy when document is end
-    var commanders : [String: WebCommander] = ["webapi":WebapiDemo.share]
-
+    var commanders : [String: WebCommander] = ["webapi": WebapiDemo.share]
+    weak var webview : WKWebView?
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -26,8 +26,15 @@ class ViewController: UIViewController {
         loadContent(v)
         v.navigationDelegate = self
         v.uiDelegate = self
+        webview = v
+        NotificationCenter.default.addObserver(self, selector: #selector(onNoti), name: nil, object: WebapiDemo.share)
     }
-
+    @objc
+    func onNoti(_ noti: Notification) {
+        let s = "webapi.dispatchEvent(new CustomEvent('\(noti.name.rawValue)', webapi))"
+        webview?.evaluateJavaScript(s, completionHandler: nil)
+        
+    }
 
     func createwebview(_ config: WKWebViewConfiguration) -> WKWebView {
         return WKWebView(frame: .zero, configuration: config)
