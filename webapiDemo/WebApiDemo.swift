@@ -13,43 +13,38 @@ class WebapiDemo {
     static let share = WebapiDemo()
     var x : Int?
 
-    private static func times(_ data: Data) throws -> Encodable {
-        struct Arg: Codable {
-            let obj1 : Int
-            let obj2 : Int
-        }
-
-        if let arg = try? JSONDecoder().decode(JSCmd<Arg>.self, from: data).args {
-            return JsValueReturn(times(arg.obj1, arg.obj2))
-        }
-        throw JSCmdError.invalidparameters
+    struct Arg: Codable {
+        let obj1 : Int
+        let obj2 : Int
     }
-    private static func times(_ a1: Int, _ a2: Int) -> Int {
-        return a1 * a2
+    private static func times1(_ args: Arg) -> Int {
+        return args.obj1 * args.obj2
     }
 
-    private static func waitAndAdd(_ data: Data , b: @escaping (Int) -> () ) throws {
-        struct Arg: Codable {
-            let seconds : Int
-        }
-        if let arg = try? JSONDecoder().decode(JSCmd<Arg>.self, from: data).args {
-            waitAndAdd(arg.seconds) {ret in
-                b(ret)
-            }
-            return
-        }
-        throw JSCmdError.invalidparameters
+    struct Arg1: Codable {
+        let seconds : Int
     }
-    private static func waitAndAdd(_ a1: Int, b: @escaping (Int) -> () ) {
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + Double(a1)) {
-            b(a1+1)
+    private static func waitAndAdd(_ args: Arg1, b: @escaping (Int) -> () ) {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(args.seconds)) {
+            b(args.seconds + 1)
         }
     }
-    func trigger(_ data: Data) throws -> Encodable {
+
+    private static func waitAndAdd2(_ args: Arg1) -> JSFuture<Int> {
+        let f = JSFuture<Int>()
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(args.seconds)) {
+            f.value = args.seconds + 1
+        }
+        return f
+    }
+
+    func trigger(_ : Data) throws -> Encodable {
         genEvents()
         return JsDone()
     }
+
     func genEvents() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             if let `self` = self, let x = self.x, x < 16 {
@@ -64,14 +59,15 @@ class WebapiDemo {
 extension WebapiDemo: WebCommander {
     func get_async_pointer(_ method: String) throws -> AsyncCall {
         if method == "waitAndAdd" {
-            return WebapiDemo.waitAndAdd
+            //return WebapiDemo.waitAndAdd
+            return JsCmdUtil.template(WebapiDemo.waitAndAdd2)
         }
         throw JSCmdError.methodnotfound
     }
 
     func get_sync_pointer(_ method: String) throws -> SyncCall {
         if method == "times" {
-            return WebapiDemo.times
+            return JsCmdUtil.template(WebapiDemo.times1)
         }
         if method == "trigger" {
             return trigger

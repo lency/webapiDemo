@@ -49,7 +49,7 @@ struct SetVal<T:Codable> : Codable {
     let newVal : T
 }
 
-typealias AsyncCall = (Data, @escaping (Int) -> () ) throws -> ()
+typealias AsyncCall = (Data, @escaping (Encodable) throws -> () ) throws -> ()
 typealias SyncCall = (Data) throws -> Encodable
 typealias GetterCall = (Data) throws -> Data
 typealias SetterCall = (Data) throws -> ()
@@ -76,8 +76,11 @@ extension WebCommander {
         case .AsyncFunction:
             let ck = "_" + String(format: "%x", json.hashValue)
             data = try JsPromiseReturn( ck ).toJsonData()
-            try get_async_pointer(method)(json) {ret in
-                invoker("\(ck)(\(ret))")
+            try get_async_pointer(method)(json) { (ret: Encodable) in
+                let d = try ret.toJsonData()
+                if let s = String(data:d, encoding: .utf8) {
+                    invoker("\(ck)('\(s)')")
+                }
             }
         case .Function:
             data = try get_sync_pointer(method)(json).toJsonData()

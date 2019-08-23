@@ -17,6 +17,8 @@
 		033258A3230D5FDF00CE24A6 /* inj.js in Resources */ = {isa = PBXBuildFile; fileRef = 033258A2230D5FDF00CE24A6 /* inj.js */; };
 		FAF8C90F230EEA7400100374 /* WebApiDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C90E230EEA7400100374 /* WebApiDemo.swift */; };
 		FAF8C911230EEAFB00100374 /* WebApiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C910230EEAFB00100374 /* WebApiBridge.swift */; };
+		FAF8C913231026A200100374 /* JSCmdUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C912231026A200100374 /* JSCmdUtil.swift */; };
+		FAF8C915231027D000100374 /* JSFuture.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C914231027D000100374 /* JSFuture.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		033258A2230D5FDF00CE24A6 /* inj.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = inj.js; sourceTree = "<group>"; };
 		FAF8C90E230EEA7400100374 /* WebApiDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebApiDemo.swift; sourceTree = "<group>"; };
 		FAF8C910230EEAFB00100374 /* WebApiBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebApiBridge.swift; sourceTree = "<group>"; };
+		FAF8C912231026A200100374 /* JSCmdUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSCmdUtil.swift; sourceTree = "<group>"; };
+		FAF8C914231027D000100374 /* JSFuture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSFuture.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +79,8 @@
 				FAF8C90E230EEA7400100374 /* WebApiDemo.swift */,
 				FAF8C910230EEAFB00100374 /* WebApiBridge.swift */,
 				03115A8A230FEDC900EB0453 /* Encoder+Json.swift */,
+				FAF8C912231026A200100374 /* JSCmdUtil.swift */,
+				FAF8C914231027D000100374 /* JSFuture.swift */,
 			);
 			path = webapiDemo;
 			sourceTree = "<group>";
@@ -152,11 +158,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAF8C915231027D000100374 /* JSFuture.swift in Sources */,
 				03325891230D5A7D00CE24A6 /* ViewController.swift in Sources */,
 				0332588F230D5A7D00CE24A6 /* AppDelegate.swift in Sources */,
 				FAF8C911230EEAFB00100374 /* WebApiBridge.swift in Sources */,
 				FAF8C90F230EEA7400100374 /* WebApiDemo.swift in Sources */,
 				03115A8B230FEDC900EB0453 /* Encoder+Json.swift in Sources */,
+				FAF8C913231026A200100374 /* JSCmdUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     //where BOM commander is associatate to an instant of webview, usualy save in the view controller
     //where DOM commander is associatate to an document, usualy save in the view controller, and create when document start, destroy when document is end
     var commanders : [String: WebCommander] = ["webapi": WebapiDemo.share]
+    
     weak var webview : WKWebView?
     override func viewDidLoad() {
         super.viewDidLoad()

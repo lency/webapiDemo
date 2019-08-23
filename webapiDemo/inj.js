@@ -9,7 +9,8 @@ function imp_stub(api, name) {
       return new Promise(function(reslove) {
         window[ret.promise] = function(value) {
           delete window[ret.promise];
-          reslove(value);
+          value = JSON.parse(value);
+          reslove(value.value);
         };
       });
   }
