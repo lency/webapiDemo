@@ -49,7 +49,6 @@ struct SetVal<T:Codable> : Codable {
     let newVal : T
 }
 
-typealias AsyncCall = (Data, @escaping (Encodable) throws -> () ) throws -> ()
 typealias FutureCall = (Data) throws -> EncodableFuture
 typealias SyncCall = (Data) throws -> Encodable
 //typealias GetterCall = (Data) throws -> Data
@@ -58,7 +57,6 @@ typealias Proc = (Data) throws -> ()
 
 protocol WebCommander {
 //    func dispatch(_ method: String, _ type: CmdType, _ json: Data, invoker: @escaping (String) -> ()) throws -> String?
-    func get_async_pointer(_ method: String) throws -> AsyncCall
     func get_sync_pointer(_ method: String) throws -> SyncCall
     func get_setter_pointer(_ method: String) throws -> SetterCall
     func get_future_pointer(_ method: String) throws -> FutureCall
@@ -79,12 +77,6 @@ extension WebCommander {
         case .AsyncFunction:
             let ck = "_" + String(format: "%x", json.hashValue)
             data = try JsPromiseReturn( ck ).toJsonData()
-//            try get_async_pointer(method)(json) { (ret: Encodable) in
-//                let d = try ret.toJsonData()
-//                if let s = String(data:d, encoding: .utf8) {
-//                    invoker("\(ck)('\(s)')")
-//                }
-//            }
             try get_future_pointer(method)(json).then { (ret: Encodable) in
                 if let d = try? ret.toWrapperJsonData(),
                   let s = String(data:d, encoding: .utf8) {

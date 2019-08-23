@@ -25,13 +25,6 @@ class WebapiDemo : BaseCommand {
     struct Arg1: Codable {
         let seconds : Int
     }
-    private static func waitAndAdd(_ args: Arg1, b: @escaping (Int) -> () ) {
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + Double(args.seconds)) {
-            b(args.seconds + 1)
-        }
-    }
-//async func waitAndAdd(secconds) in future style
     private static func waitAndAdd2(_ args: Arg1) -> JSFuture<Int> {
         let f = JSFuture<Int>()
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(args.seconds)) {
@@ -54,22 +47,15 @@ class WebapiDemo : BaseCommand {
             }
         }
     }
-//setter for x property
-    func setX(_ arg: SetVal<Int?>) -> Encodable {
-        x = arg.newVal
-        return JsDone()
-    }
+
 //init calls
     override init() {
         super.init()
         syncCalls = ["times": JsCmdUtil.template(WebapiDemo.times),
-                     "trigger": trigger
-        ]
-        asyncCalls = ["waitAndAdd": JsCmdUtil.template(WebapiDemo.waitAndAdd2)
-        ]
+                     "trigger": trigger]
+
         futureCalls = ["waitAndAdd": JsCmdUtil.template(WebapiDemo.waitAndAdd2)]
-//        let setx : SetterCall = JsCmdUtil.template(setX)
-//        setterCalls = ["x":  setx]
+
     }
 //specially for setter
     override func get_setter_pointer(_ method: String) throws -> SetterCall {

@@ -39,9 +39,7 @@ struct JsCmdUtil {
     static func ToJsValueReturn<T:Encodable>(_ d: T) -> JsValueReturn<T> {
         return JsValueReturn(d)
     }
-//    static func toAsyncCall<T>(_ f: JSFuture<T>) -> AsyncCall {
-//
-//    }
+
     static func template<T:Codable>(_ fun: @escaping (T) -> JsDone) -> SetterCall{
         return { data in
             if let arg = try? JSONDecoder().decode(JSCmd<T>.self, from: data).args {
@@ -50,58 +48,11 @@ struct JsCmdUtil {
             throw JSCmdError.invalidparameters
         }
     }
-
-//    static func template<T:Codable, R:Encodable>(_ fun: @escaping (T) -> R) -> SyncCall {
-//        return { data in
-//            if let arg = try? JSONDecoder().decode(JSCmd<T>.self, from: data).args {
-//                return JsValueReturn(fun(arg))
-//            }
-//            throw JSCmdError.invalidparameters
-//        }
-//    }
-
     static func template<T:Codable, R:Encodable>(_ fun: @escaping (T) -> R) -> SyncCall {
         return toArg <+> fun <+> ToJsValueReturn
     }
 
-    static func template<T:Codable, R:Encodable>(_ fun: @escaping (T, @escaping (R)->()) -> ()) -> AsyncCall {
-        return { (data, b) in
-            if let arg = try? JSONDecoder().decode(JSCmd<T>.self, from: data).args {
-                fun(arg) { (v:R) in
-                    try? b(JsValueReturn(v))
-                }
-                return
-            }
-            throw JSCmdError.invalidparameters
-        }
-    }
-
-    static func template<T:Codable, R:Encodable>(_ fun: @escaping (T) -> JSFuture<R>) -> AsyncCall {
-        return { (data, b) in
-            if let arg = try? JSONDecoder().decode(JSCmd<T>.self, from: data).args {
-                fun(arg).then { (v: R?) in
-                    if let v = v {
-                        try? b(JsValueReturn(v))
-                    }
-                }
-                return
-            }
-            throw JSCmdError.invalidparameters
-        }
-    }
     static func template<T:Codable, R:Encodable>(_ fun: @escaping (T) -> JSFuture<R>) -> FutureCall {
         return toArg <+> fun
-//
-//        return { (data, b) in
-//            if let arg = try? JSONDecoder().decode(JSCmd<T>.self, from: data).args {
-//                fun(arg).then { (v: R?) in
-//                    if let v = v {
-//                        try? b(JsValueReturn(v))
-//                    }
-//                }
-//                return
-//            }
-//            throw JSCmdError.invalidparameters
-//        }
     }
 }
