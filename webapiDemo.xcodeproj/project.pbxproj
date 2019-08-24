@@ -20,6 +20,7 @@
 		FAF8C913231026A200100374 /* JSCmdUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C912231026A200100374 /* JSCmdUtil.swift */; };
 		FAF8C915231027D000100374 /* JSFuture.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C914231027D000100374 /* JSFuture.swift */; };
 		FAF8C9172310348E00100374 /* JSBaseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C9162310348E00100374 /* JSBaseCommand.swift */; };
+		FAF8C9192311672500100374 /* FPCompose.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C9182311672500100374 /* FPCompose.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		FAF8C912231026A200100374 /* JSCmdUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSCmdUtil.swift; sourceTree = "<group>"; };
 		FAF8C914231027D000100374 /* JSFuture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSFuture.swift; sourceTree = "<group>"; };
 		FAF8C9162310348E00100374 /* JSBaseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSBaseCommand.swift; sourceTree = "<group>"; };
+		FAF8C9182311672500100374 /* FPCompose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPCompose.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 		0332588D230D5A7D00CE24A6 /* webapiDemo */ = {
 			isa = PBXGroup;
 			children = (
+				FAF8C91A2311684300100374 /* JSBridgeEngine */,
 				0332588E230D5A7D00CE24A6 /* AppDelegate.swift */,
 				03325890230D5A7D00CE24A6 /* ViewController.swift */,
 				03325892230D5A7D00CE24A6 /* Main.storyboard */,
@@ -79,13 +82,21 @@
 				033258A0230D5B2700CE24A6 /* demo.html */,
 				033258A2230D5FDF00CE24A6 /* inj.js */,
 				FAF8C90E230EEA7400100374 /* WebApiDemo.swift */,
+			);
+			path = webapiDemo;
+			sourceTree = "<group>";
+		};
+		FAF8C91A2311684300100374 /* JSBridgeEngine */ = {
+			isa = PBXGroup;
+			children = (
 				FAF8C910230EEAFB00100374 /* WebApiBridge.swift */,
 				03115A8A230FEDC900EB0453 /* Encoder+Json.swift */,
 				FAF8C912231026A200100374 /* JSCmdUtil.swift */,
 				FAF8C914231027D000100374 /* JSFuture.swift */,
 				FAF8C9162310348E00100374 /* JSBaseCommand.swift */,
+				FAF8C9182311672500100374 /* FPCompose.swift */,
 			);
-			path = webapiDemo;
+			path = JSBridgeEngine;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -168,6 +179,7 @@
 				FAF8C90F230EEA7400100374 /* WebApiDemo.swift in Sources */,
 				FAF8C9172310348E00100374 /* JSBaseCommand.swift in Sources */,
 				03115A8B230FEDC900EB0453 /* Encoder+Json.swift in Sources */,
+				FAF8C9192311672500100374 /* FPCompose.swift in Sources */,
 				FAF8C913231026A200100374 /* JSCmdUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

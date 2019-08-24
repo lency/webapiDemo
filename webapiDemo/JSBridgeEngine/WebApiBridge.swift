@@ -51,12 +51,10 @@ struct SetVal<T:Codable> : Codable {
 
 typealias FutureCall = (Data) throws -> EncodableFuture
 typealias SyncCall = (Data) throws -> Encodable
-//typealias GetterCall = (Data) throws -> Data
 typealias SetterCall = (Data) throws -> JsDone
 typealias Proc = (Data) throws -> ()
 
 protocol WebCommander {
-//    func dispatch(_ method: String, _ type: CmdType, _ json: Data, invoker: @escaping (String) -> ()) throws -> String?
     func get_sync_pointer(_ method: String) throws -> SyncCall
     func get_setter_pointer(_ method: String) throws -> SetterCall
     func get_future_pointer(_ method: String) throws -> FutureCall

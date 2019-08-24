@@ -51,10 +51,10 @@ class WebapiDemo : BaseCommand {
 //init calls
     override init() {
         super.init()
-        syncCalls = ["times": JsCmdUtil.template(WebapiDemo.times),
+        syncCalls = ["times": JsCmdUtil.toArg <+> WebapiDemo.times <+> JsCmdUtil.toJsValueReturn,
                      "trigger": trigger]
 
-        futureCalls = ["waitAndAdd": JsCmdUtil.template(WebapiDemo.waitAndAdd2)]
+        futureCalls = ["waitAndAdd": JsCmdUtil.toArg <+> WebapiDemo.waitAndAdd2]
 
     }
 //specially for setter
