@@ -75,22 +75,38 @@ function imp_stub(api, name) {
   return new api();
 }
 
-class Emitter {
+class JEventTarget {
     constructor() {
-        var delegate = document.createDocumentFragment();
-        [
-         'addEventListener',
-         'dispatchEvent',
-         'removeEventListener'
-         ].forEach(f =>
-                   this[f] = (...xs) => delegate[f](...xs)
-                   )
+        this.listeners = new Map();
+    }
+    addEventListener(type, listener) {
+        this.listeners.set(listener.bind(this), {
+                           type, listener
+                           });
+    }
+    removeEventListener(type, listener) {
+        for(let [key, value] of this.listeners){
+            if(value.type !== type || listener !== value.listener){
+                continue;
+            }
+            this.listeners.delete(key);
+        }
+    }
+    dispatchEvent(event) {
+        Object.defineProperty(event, 'target',{value: this});
+        this['on' + event.type] && this['on' + event.type](event);
+        for (let [key, value] of this.listeners) {
+            if (value.type !== event.type) {
+                continue;
+            }
+            key(event);
+        }
     }
 }
 
 
 let webapi = imp_stub(
-  class extends Emitter {
+  class extends JEventTarget {
     times(obj1, obj2) {}
     async waitAndAdd(seconds) {}
     get x() {}

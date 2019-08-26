@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import WebKit
 
 struct JsValueReturn<T: Encodable> : Encodable {
     let type = "value"
@@ -58,6 +59,7 @@ protocol WebCommander {
     func get_sync_pointer(_ method: String) throws -> SyncCall
     func get_setter_pointer(_ method: String) throws -> SetterCall
     func get_future_pointer(_ method: String) throws -> FutureCall
+    var jsPiece: String{ get }
 }
 
 enum CmdType : String, Codable {
@@ -105,29 +107,30 @@ extension WebCommander {
     }
 }
 
-struct WebCommandRouter {
-    
-    func tryHandle(_ identifier: String, _ cmd: String?) -> Bool {
-        if identifier == "__native__command__" {
-//            if let dt = cmd,
-//                let data = dt.data(using: .utf8),
-//                let cmd = try? JSONDecoder().decode(JSCmdHeader.self, from: data) {
-//                var ret1 : String?
-//                do {
-//                    if let commander = commanders[cmd.class] {
-//                        ret1 = try commander.dispatch_ex(cmd.method, cmd.type, data) { (s : String) in
-//                            webView.evaluateJavaScript(s, completionHandler: nil)
-//                        }
-//                        completionHandler(ret1)
-//                        return
-//                    }
-//                    completionHandler(ret1)
-//                } catch {
-//                    let ret = "{\"type\":\"error\",\"value\":\"\(error.localizedDescription)\"}"
-//                    completionHandler(ret)
-//                }
-//            }
-            return true
+extension PWebView {
+    static func bridgeConfiguration() -> WKWebViewConfiguration {
+        let x = WKWebViewConfiguration()
+
+        let script = WKUserScript(source: WebCommandRouter.injectScript,
+                                  injectionTime: .atDocumentStart,// 在载入时就添加JS
+            forMainFrameOnly: false) // 只添加到mainFrame中
+
+        x.userContentController.addUserScript(script)
+        return x
+    }
+    static func createBridgeWebView() -> WKWebView {
+        let webView =  PWebView(frame: .zero, configuration: bridgeConfiguration())
+        webView.uiDelegate = webView
+        NotificationCenter.default.addObserver(webView, selector: #selector(onNoti), name: nil, object: WebapiDemo.share)
+        webView.loadapiStub()
+        return webView
+    }
+
+    @objc
+    func onNoti(_ noti: Notification) {
+        if let command = noti.object as? BaseCommand {
+            let s = "\(command.class).dispatchEvent(new Event('\(noti.name.rawValue)'))"
+            evaluateJavaScript(s, completionHandler: nil)
         }
     }
 }

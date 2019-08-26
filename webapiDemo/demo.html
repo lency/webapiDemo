@@ -3,6 +3,7 @@
     </head>
 <h1><a name="header-n13" class="md-header-anchor md-print-anchor" href="af://n13"> </a><span>a new kind of webview bridge base on prompt</span></h1>
 <p><span>let&#39;s start with a piece of sample.</span></p>
+<p><span>sample 0x01: sync function call/property getset/builtin async command</span></p>
 <pre><code class='language-javascript' lang='javascript'>async function test() {
     var a = webapi.times(3,2) // 6 -&gt; a
     var b = webapi.x
@@ -15,7 +16,14 @@
 </pre>
 <p><span>use javascript as javascript</span></p>
 <p><span>Clean, Beautiful, Easy Understand</span></p>
-
+<p><span>sample 0x02: bultin event</span></p>
+<pre><code class='language-javascript' lang='javascript'>function testEvent() {
+    webapi.addEventListener('play', function(){alert(this.x)})
+    webapi.trigger()
+    }
+</code>
+<button onclick = "testEvent()">run</button>
+</pre>
 <script>
     
     async function test() {
@@ -28,5 +36,10 @@
             alert(e)
         }
     }
+
+function testEvent() {
+    webapi.addEventListener('play', function(){alert(this.x)})
+    webapi.trigger()
+}
     
 </script>

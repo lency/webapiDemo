@@ -10,6 +10,9 @@ import Foundation
 
 
 class BaseCommand: WebCommander {
+    var `class`: String { return "undefined" }
+    var jsPiece : String { return "" }
+
     var syncCalls: [String: SyncCall] = [:]
     var setterCalls: [String: SetterCall] = [:]
     var futureCalls: [String: FutureCall] = [:]

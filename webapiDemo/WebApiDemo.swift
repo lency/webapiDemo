@@ -9,8 +9,24 @@
 import Foundation
 
 class WebapiDemo : BaseCommand {
+    override var `class`: String { return "webapi" }
+    override var jsPiece: String {
+        return """
+    let webapi = imp_stub(
+    class extends JEventTarget {
+    times(obj1, obj2) {}
+    async waitAndAdd(seconds) {}
+    get x() {}
+    set x(newVal) {}
+    trigger(){}
+    },
+    "webapi"
+    );
+    """
+    }
     static let share = WebapiDemo()
-//properties
+
+    //properties
     var x : Int?
 
 //sync func time(obj1, obj2)
@@ -41,7 +57,7 @@ class WebapiDemo : BaseCommand {
     func genEvents() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             if let `self` = self, let x = self.x, x < 16 {
-                NotificationCenter.default.post(name: .init("play"), object: self, userInfo: ["value" : x])
+                NotificationCenter.default.post(name: .init("play"), object: self, userInfo: nil)
                 self.x = x + 1
                 self.genEvents()
             }
