@@ -25,3 +25,4 @@ func <+><A,B,C> (_ x: @escaping (A) throws -> B, _ y: @escaping (B) throws -> C)
 func <+><A,B,C> (_ x: @escaping (A) ->B, _ y: @escaping (B) throws -> C) -> (A) throws -> C {
     return { try y(x($0)) }
 }
+

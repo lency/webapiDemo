@@ -13,38 +13,43 @@ protocol EncodableFuture {
 }
 
 class JSFuture<T> {
-    typealias Callback = (T?) -> ()
-    var value: T? {
-        willSet {
-            if let deal = deal {
-                deal(newValue)
-            }
-            deal = nil
-        }
-    }
-    enum State {
-        case Init
-        case OK
-    }
-    var state: State = .Init
+    typealias Callback = (T) -> ()
+    private var value: T?
     private var deal : Callback?
     func then (_ deal: @escaping Callback) {
-        if state == .OK {
+        if let value = self.value {
             deal(value)
         } else {
             self.deal = deal
         }
+    }
+    func succ(_ val: T) {
+        if let deal = deal {
+            deal(val)
+        }
+        deal = nil
     }
 
 }
 
 extension JSFuture : EncodableFuture where T: Encodable {
     func then (_ deal: @escaping (Encodable) -> ()) {
-        if state == .OK {
+        if let value = self.value {
             deal(value)
         } else {
             self.deal = deal
         }
     }
+}
 
+extension JSFuture {
+    func map<U>(_ op: @escaping (T) -> U) -> JSFuture<U> {
+        let future = JSFuture<U>()
+        then { future.succ(op($0)) }
+        return future
+    }
+
+    static func lift<U>(_ op: @escaping (T) -> U) -> (JSFuture<T>) -> JSFuture<U> {
+        return {$0.map(op)}
+    }
 }

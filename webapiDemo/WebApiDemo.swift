@@ -28,7 +28,7 @@ class WebapiDemo : BaseCommand {
     private static func waitAndAdd2(_ args: Arg1) -> JSFuture<Int> {
         let f = JSFuture<Int>()
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(args.seconds)) {
-            f.value = args.seconds + 1
+            f.succ(args.seconds + 1)
         }
         return f
     }

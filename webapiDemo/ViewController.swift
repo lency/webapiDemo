@@ -80,23 +80,22 @@ extension ViewController : WKUIDelegate {
     
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
         if prompt == "__native__command__" {
-            let ret = "{\"type\":\"error\",\"value\":23}"
             if let dt = defaultText,
                 let data = dt.data(using: .utf8),
                 let cmd = try? JSONDecoder().decode(JSCmdHeader.self, from: data) {
                 var ret1 : String?
                 do {
                     if let commander = commanders[cmd.class] {
-                        ret1 = try commander.dispatch_ex(cmd.method, cmd.type, data) { (s : String) in
-                            webView.evaluateJavaScript(s, completionHandler: nil)
+                        ret1 = try commander.dispatch_ex(cmd.method, cmd.type, data) { [weak webView] (s : String) in
+                            webView?.evaluateJavaScript(s, completionHandler: nil)
                         }
                         completionHandler(ret1)
                         return
                     }
-                    completionHandler(ret)
+                    completionHandler(ret1)
                 } catch {
+                    let ret = "{\"type\":\"error\",\"value\":\"\(error.localizedDescription)\"}"
                     completionHandler(ret)
-
                 }
             }
             return

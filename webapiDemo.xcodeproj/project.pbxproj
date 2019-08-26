@@ -15,6 +15,7 @@
 		03325899230D5A7F00CE24A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03325897230D5A7F00CE24A6 /* LaunchScreen.storyboard */; };
 		033258A1230D5B2700CE24A6 /* demo.html in Resources */ = {isa = PBXBuildFile; fileRef = 033258A0230D5B2700CE24A6 /* demo.html */; };
 		033258A3230D5FDF00CE24A6 /* inj.js in Resources */ = {isa = PBXBuildFile; fileRef = 033258A2230D5FDF00CE24A6 /* inj.js */; };
+		039B823523137FE600E6A58C /* JSAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039B823423137FE600E6A58C /* JSAPIManager.swift */; };
 		FAF8C90F230EEA7400100374 /* WebApiDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C90E230EEA7400100374 /* WebApiDemo.swift */; };
 		FAF8C911230EEAFB00100374 /* WebApiBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C910230EEAFB00100374 /* WebApiBridge.swift */; };
 		FAF8C913231026A200100374 /* JSCmdUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF8C912231026A200100374 /* JSCmdUtil.swift */; };
@@ -34,6 +35,7 @@
 		0332589A230D5A7F00CE24A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		033258A0230D5B2700CE24A6 /* demo.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = demo.html; sourceTree = "<group>"; };
 		033258A2230D5FDF00CE24A6 /* inj.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = inj.js; sourceTree = "<group>"; };
+		039B823423137FE600E6A58C /* JSAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSAPIManager.swift; sourceTree = "<group>"; };
 		FAF8C90E230EEA7400100374 /* WebApiDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebApiDemo.swift; sourceTree = "<group>"; };
 		FAF8C910230EEAFB00100374 /* WebApiBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebApiBridge.swift; sourceTree = "<group>"; };
 		FAF8C912231026A200100374 /* JSCmdUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSCmdUtil.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 		0332588D230D5A7D00CE24A6 /* webapiDemo */ = {
 			isa = PBXGroup;
 			children = (
+				039B823323137FCC00E6A58C /* JSAPIManager */,
 				FAF8C91A2311684300100374 /* JSBridgeEngine */,
 				0332588E230D5A7D00CE24A6 /* AppDelegate.swift */,
 				03325890230D5A7D00CE24A6 /* ViewController.swift */,
@@ -84,6 +87,38 @@
 				FAF8C90E230EEA7400100374 /* WebApiDemo.swift */,
 			);
 			path = webapiDemo;
+			sourceTree = "<group>";
+		};
+		039B823323137FCC00E6A58C /* JSAPIManager */ = {
+			isa = PBXGroup;
+			children = (
+				039B82382313B9C600E6A58C /* DOM */,
+				039B82372313B9C000E6A58C /* BOM */,
+				039B82362313B9B700E6A58C /* AOM */,
+				039B823423137FE600E6A58C /* JSAPIManager.swift */,
+			);
+			path = JSAPIManager;
+			sourceTree = "<group>";
+		};
+		039B82362313B9B700E6A58C /* AOM */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AOM;
+			sourceTree = "<group>";
+		};
+		039B82372313B9C000E6A58C /* BOM */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = BOM;
+			sourceTree = "<group>";
+		};
+		039B82382313B9C600E6A58C /* DOM */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = DOM;
 			sourceTree = "<group>";
 		};
 		FAF8C91A2311684300100374 /* JSBridgeEngine */ = {
@@ -177,6 +212,7 @@
 				0332588F230D5A7D00CE24A6 /* AppDelegate.swift in Sources */,
 				FAF8C911230EEAFB00100374 /* WebApiBridge.swift in Sources */,
 				FAF8C90F230EEA7400100374 /* WebApiDemo.swift in Sources */,
+				039B823523137FE600E6A58C /* JSAPIManager.swift in Sources */,
 				FAF8C9172310348E00100374 /* JSBaseCommand.swift in Sources */,
 				03115A8B230FEDC900EB0453 /* Encoder+Json.swift in Sources */,
 				FAF8C9192311672500100374 /* FPCompose.swift in Sources */,
