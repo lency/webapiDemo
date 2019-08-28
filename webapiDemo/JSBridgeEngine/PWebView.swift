@@ -38,7 +38,9 @@ extension PWebView : WKUIDelegate {
         if nil == rlDelegate?.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler) {
             let x = UIAlertController(title: frame.request.url?.host ?? "webkit", message: message, preferredStyle: .alert)
             x.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            if nil == closedVC()?.present(x, animated: true, completion: {
+            let vc = closedVC()
+            vc?.presentedViewController?.dismiss(animated: false, completion: nil)
+            if nil == vc?.present(x, animated: true, completion: {
                 completionHandler()
             }) {
                 completionHandler()
@@ -63,7 +65,8 @@ extension PWebView : WKUIDelegate {
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
                 completionHandler(alert.textFields![0].text!)
             }))
-
+            let vc = closedVC()
+            vc?.presentedViewController?.dismiss(animated: false, completion: nil)
             if nil == closedVC()?.present(alert, animated: true, completion: nil) {
                 completionHandler("")
             }
@@ -78,7 +81,8 @@ extension PWebView : WKUIDelegate {
             x.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in
                 completionHandler(false)
             }))
-
+            let vc = closedVC()
+            vc?.presentedViewController?.dismiss(animated: false, completion: nil)
             if nil == closedVC()?.present(x, animated: true, completion: nil) {
                 completionHandler(false)
             }

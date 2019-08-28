@@ -64,6 +64,11 @@ class WebapiDemo : BaseCommand {
         }
     }
 
+    func setX(_ arg: SetVal<Int?>) -> JsDone {
+        x = arg.newVal
+        return JsDone()
+    }
+    
 //init calls
     override init() {
         super.init()
@@ -71,17 +76,6 @@ class WebapiDemo : BaseCommand {
                      "trigger": trigger]
 
         futureCalls = ["waitAndAdd": JsCmdUtil.toArg <+> WebapiDemo.waitAndAdd2]
-
-    }
-//specially for setter
-    override func get_setter_pointer(_ method: String) throws -> SetterCall {
-        if method == "x" {
-            return {[weak self] data in
-                self?.x = try JSONDecoder().decode(JSCmd<SetVal<Int?>>.self, from: data).args.newVal
-                return JsDone()
-            }
-        }
-
-        throw JSCmdError.methodnotfound
+        setterCalls = ["x": JsCmdUtil.toArg <+> setX]
     }
 }

@@ -29,7 +29,6 @@ class JSFuture<T> {
         }
         deal = nil
     }
-
 }
 
 extension JSFuture : EncodableFuture where T: Encodable {
