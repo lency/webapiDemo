@@ -35,4 +35,7 @@ class BaseCommand: WebCommander {
         }
         throw JSCmdError.methodnotfound
     }
+    func sendEvent(_ name: String) {
+        NotificationCenter.default.post(name: .init(name), object: self, userInfo: nil)
+    }
 }

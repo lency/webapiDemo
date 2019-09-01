@@ -34,14 +34,14 @@ class WebapiDemo : BaseCommand {
         let obj1 : Int
         let obj2 : Int
     }
-    private static func times(_ args: Arg) -> Int {
+    private func times(_ args: Arg) -> Int {
         return args.obj1 * args.obj2
     }
 //async func waitAndAdd(secconds)
     struct Arg1: Codable {
         let seconds : Int
     }
-    private static func waitAndAdd2(_ args: Arg1) -> JSFuture<Int> {
+    private func waitAndAdd2(_ args: Arg1) -> JSFuture<Int> {
         let f = JSFuture<Int>()
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(args.seconds)) {
             f.succ(args.seconds + 1)
@@ -57,7 +57,7 @@ class WebapiDemo : BaseCommand {
     func genEvents() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             if let `self` = self, let x = self.x, x < 16 {
-                NotificationCenter.default.post(name: .init("play"), object: self, userInfo: nil)
+                self.sendEvent("play")
                 self.x = x + 1
                 self.genEvents()
             }
@@ -72,10 +72,10 @@ class WebapiDemo : BaseCommand {
 //init calls
     override init() {
         super.init()
-        syncCalls = ["times": JsCmdUtil.toArg <+> WebapiDemo.times <+> JsCmdUtil.toJsValueReturn,
+        syncCalls = ["times": JsCmdUtil.toArg <+> times <+> JsCmdUtil.toJsValueReturn,
                      "trigger": trigger]
 
-        futureCalls = ["waitAndAdd": JsCmdUtil.toArg <+> WebapiDemo.waitAndAdd2]
+        futureCalls = ["waitAndAdd": JsCmdUtil.toArg <+> waitAndAdd2]
         setterCalls = ["x": JsCmdUtil.toArg <+> setX]
     }
 }
